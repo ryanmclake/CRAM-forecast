@@ -1,19 +1,18 @@
-if (!require('pacman')) install.packages('pacman'); library('pacman')
-pacman::p_load(tidyverse, lubridate, devtools)
-
-# Bypass the latest CRAN version of neonstore and use Carl's most recent Github push
-remotes::install_github("cboettig/neonstore")
-
-# -----------------------------------------------------------------------------------------------------------------
-
-#' Download and load duckdb_r
-#' remember a mac is squiggle ~/ and a PC is period ./
 download.file("https://github.com/cwida/duckdb/releases/download/master-builds/duckdb_r_src.tar.gz", destfile = "./duckdb_r_src.tar.gz")
 install.packages("duckdb_r_src.tar.gz", repo = NULL)
 
+
+remotes::install_github("cboettig/neonstore")
+
+
+if (!require('pacman')) install.packages('pacman'); library('pacman')
+pacman::p_load(tidyverse, lubridate)
+
+# -----------------------------------------------------------------------------------------------------------------
+
 #' Find and set the neonstore directory
 neonstore::neon_dir()
-Sys.setenv("NEONSTORE_HOME" = "/groups/rqthomas_lab/neonstore")
+Sys.setenv("NEONSTORE_HOME" = "/groups/rqthomas_lab/neonstore_cram")
 neonstore::neon_dir()
 
 # Lake and tower met station download
@@ -92,7 +91,7 @@ met_target <- full_join(radiation, airtemp, by = "time")%>%
   mutate(Rain = Rain*0.024)%>%
   mutate(ShortWave = ifelse(ShortWave<=0,0,ShortWave))
 
-
+write_csv(met_target, "/home/ryan333/NEONdata/met_data/cram_met_obs.csv")
 
 # Lake water temperature
 buoy_products = c("DP1.20264.001")
@@ -112,3 +111,4 @@ water_temp <- neonstore::neon_table(table = "TSD_30_min-expanded", site = "CRAM"
   rename(temp = tsdWaterTempMean)%>%
   mutate(variable = "watertemperature")
 
+write_csv(water_temp, "/home/ryan333/NEONdata/temp_data/cram_temp_obs.csv")
