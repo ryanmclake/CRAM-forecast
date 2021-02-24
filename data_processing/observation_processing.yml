@@ -11,19 +11,14 @@ lake_longitude: 89.473688  #Degrees West
 #Currently needed to be GMT so that it interfaces with the NOAA forecast
 #reference_tzone <<- "GMT"
 #Local time zone of the lake
-local_tzone: "EST"
+local_tzone: "CST"
 
 noaa_location: CRAM
 
 met_raw_obs_fname:
-    - carina-data/FCRmet.csv
-    - manual-data/Met_final_2015_2019.csv
-#specified_metfile: .na #NA #paste0(manual_data_location, "/met_full_postQAQC.csv")
+    - met-data/cram_met_obs.csv
 
-downscaling_coeff: manual-data/debiased.coefficients.2018_07_12_2019_07_11.RData
-
-nldas: manual-data/FCR_GLM_NLDAS_010113_123119_GMTadjusted.csv
-
+downscaling_coeff: met-data/debiased.coefficients.2018_07_12_2019_07_11.RData
 
 #########################
 ### Depth information
@@ -47,42 +42,24 @@ depths_bins_top: [0.00, 0.10, 0.50, 1.00,
                   16.5, 17.0, 17.5,
                   18.0, 18.5, 19.0]
 
-obs_config_file: observations_config_ch4_dic.csv
 
-realtime_insitu_location: mia-data
-realtime_met_station_location: carina-data
-manual_data_location: manual-data
-realtime_inflow_data_location: diana-data
 
-specified_inflow1: manual-data/FCR_weir_inflow_2013_2019_20200624_allfractions_2poolsDOC.csv
-specified_outflow1: manual-data/FCR_spillway_outflow_SUMMED_WeirWetland_2013_2019_20200615.csv
+realtime_met_station_location: met-data
+realtime_temp_location: temp-data
 
-insitu_obs_fname:
-    - mia-data/Catwalk.csv
-    - manual-data/Catwalk_cleanedEDI.csv
-secchi_fname: manual-data/Secchi_depth_2013-2019.csv
-ctd_fname: manual-data/CTD_final_2013_2019.csv
-ch4_fname: manual-data/DATASET_for_EDI_LOL_MS_10May20.csv
-nutrients_fname: manual-data/chemistry.csv
+insitu_temp_fname:
+    - temp-data/cram_temp_obs.csv
+
 variable_obsevation_depths: FALSE
-exo_sensor_2_ctd_chla: [0, 1]  #c(-2.0430, 2.5314) #c(1.8795, 0.6662)
-exo_sensor_2_ctd_do: [0, 1] #c(8.3670, 0.7152)
-do_sensor_2_ctd_do_5: [0, 1] #c(19.6254, 0.8636)
-do_sensor_2_ctd_do_9: [0, 1] #c(11.0971, 0.9156)
-ctd_2_exo_sensor_chla: [0, 1]  #c(-2.0430, 2.5314) #c(-1.582, 1.335)
-ctd_2_exo_sensor_do: [0, 1] #c(-10.770, 1.061)
-exo_sensor_2_grab_sample_fdom: [-38.95, 22.47]
+
 focal_depths: .na #1.6
-maintenance_file: /mia-data/CAT_MaintenanceLog.txt
 
 pull_from_git: TRUE
 
 target_variables:
     - temperature
-    - oxygen
 
 averaging_period:
-    - "1 hour"
     - "1 hour"
     
 averaging_period_starting_hour: "07:00:00"
@@ -90,10 +67,6 @@ averaging_period_starting_hour: "07:00:00"
 measurement_methods: 
     temperature:
         - thermistor
-        - exo_sensor
-    oxygen:
-        - do_sensor
-        - exo_sensor
     
 
 
