@@ -1,0 +1,7 @@
+site_file: NOAA_data/noaa_download_site_list.csv
+downscale: TRUE
+run_parallel: TRUE
+overwrite: FALSE
+num_cores: 8
+forecast_date: .na
+forecast_time: .na
