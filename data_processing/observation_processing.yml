@@ -44,17 +44,17 @@ depths_bins_top: [0.00, 0.10, 0.50, 1.00,
 
 
 
-realtime_met_station_location: met-data
-realtime_temp_location: temp-data
+realtime_met_station_location: master
+realtime_temp_location: master
 
 insitu_temp_fname:
-    - temp-data/cram_temp_obs.csv
+    - cram_temp_obs.csv
 
 variable_obsevation_depths: FALSE
 
 focal_depths: .na #1.6
 
-pull_from_git: TRUE
+pull_from_git: FALSE
 
 target_variables:
     - temperature
