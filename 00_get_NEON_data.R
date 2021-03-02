@@ -2,7 +2,7 @@ download.file("https://github.com/cwida/duckdb/releases/download/master-builds/d
 install.packages("duckdb_r_src.tar.gz", repo = NULL)
 
 
-remotes::install_github("cboettig/neonstore")
+remotes::install_github("cboettig/neonstore", force = T)
 
 
 if (!require('pacman')) install.packages('pacman'); library('pacman')
@@ -12,7 +12,7 @@ pacman::p_load(tidyverse, lubridate)
 
 #' Find and set the neonstore directory
 neonstore::neon_dir()
-Sys.setenv("NEONSTORE_HOME" = "/groups/rqthomas_lab/neonstore_cram")
+Sys.setenv("NEONSTORE_HOME" = "D:/neonstore")
 neonstore::neon_dir()
 
 # Lake and tower met station download
