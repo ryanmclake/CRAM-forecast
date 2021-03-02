@@ -22,7 +22,7 @@ for(i in 1:length(date)){
   download_noaa_files_s3(siteID = "CRAM", 
                          date = date[i], 
                          cycle = cycle[g], 
-                         local_directory <- "C:/Users/Owner/Documents/CRAM-forecast/NOAA_data/")
+                         local_directory <- "home/ryan333/CRAM-forecast/NOAA_data/")
 
 }
 }

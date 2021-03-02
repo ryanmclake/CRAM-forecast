@@ -1,9 +1,9 @@
 # set your WD paths for CRAM FLARE
 
-lake_directory <- "C:/Users/Owner/Documents/CRAM-forecast"
+lake_directory <- "/home/ryan333/CRAM-forecast"
 qaqc_data_location <- file.path(lake_directory, "qaqc_data")
-data_location <- "C:/Users/Owner/Documents/CRAM-forecast"
-noaa_data_location <- "C:/Users/Owner/Documents/CRAM-forecast/NOAA_data/noaa/NOAAGEFS_1hr"
+data_location <- "/home/ryan333/CRAM-forecast"
+noaa_data_location <- "/home/ryan333/CRAM-forecast/NOAA_data/noaa/NOAAGEFS_1hr"
 if(!dir.exists(qaqc_data_location)){dir.create(qaqc_data_location)}
 
 

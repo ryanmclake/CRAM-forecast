@@ -5,7 +5,7 @@ data_location: ./NOAA_data
 # Lake information
 ###########################
 
-lake_name_code: cram
+lake_name_code: CRAM
 lake_name: Crampton Lake
 lake_latitude: 46.209675   #Degrees North
 lake_longitude: 89.473688  #Degrees West
@@ -14,7 +14,7 @@ lake_longitude: 89.473688  #Degrees West
 #Currently needed to be GMT so that it interfaces with the NOAA forecast
 #reference_tzone <<- "GMT"
 #Local time zone of the lake
-local_tzone: "CST"
+local_tzone: "GMT"
 
 ##########################
 #  Information required to generate EML metadata file
@@ -58,7 +58,6 @@ parameter_uncertainty: TRUE
 met_downscale_uncertainty: TRUE
 inflow_process_uncertainty: TRUE
 
-forecast_met_model: NOAAGEFS_1hr-debias
 #########################
 ### Depth information
 #########################
@@ -87,8 +86,27 @@ depths_bins_top: [0.00, 0.10, 0.50, 1.00,
                   16.5, 17.0, 17.5,
                   18.0, 18.5, 19.0]
 
-default_temp_init: [25, 25, 25, 24, 24, 24, 24, 23, 22, 21, 16, 15, 10, 10, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 6, 6, 6, 5]
-default_temp_init_depths: [0.127, 1.004, 2.005, 3.021, 4.002, 5.004, 6.004, 7.01, 8.001, 9.015, 9.518]
+default_temp_init: [25, 25, 25, 24, 24, 
+                    24, 24, 23, 22, 21, 
+                    16, 15, 10, 10, 9, 
+                    9, 9, 9, 9, 9, 9, 
+                    9, 8, 8, 8, 8, 8, 
+                    8, 8, 7, 7, 7, 7, 
+                    7, 7, 6, 6, 6, 5]
+                    
+default_temp_init_depths: [0.00, 0.10, 0.50, 1.00,
+                  1.50, 2.00, 2.50,
+                  3.00, 3.50, 4.00,
+                  4.50, 5.00, 5.50,
+                  6.00, 6.50, 7.00,
+                  7.50, 8.00, 8.50,
+                  9.00, 9.50, 10.0,
+                  10.5, 11.0, 11.5,
+                  12.0, 12.5, 13.0,
+                  13.5, 14.0, 14.5,
+                  15.0, 15.5, 16.0,
+                  16.5, 17.0, 17.5,
+                  18.0, 18.5, 19.0]
 the_sals_init: 0.0
 
 default_snow_thickness_init: 0.0

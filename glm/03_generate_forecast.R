@@ -1,4 +1,7 @@
 #### Move to 03_forecast_inflows.R
+
+forecast_location <- "/home/ryan333/CRAM-forecast/glm"
+
 config <- yaml::read_yaml(file.path(forecast_location, "configuration_files","configure_flare.yml"))
 run_config <- yaml::read_yaml(file.path(forecast_location, "configuration_files","run_configuration.yml"))
 
@@ -23,25 +26,13 @@ end_datetime_UTC <-  lubridate::with_tz(end_datetime_local, tzone = "UTC")
 forecast_start_datetime_UTC <- lubridate::with_tz(forecast_start_datetime_local, tzone = "UTC")
 forecast_hour <- lubridate::hour(forecast_start_datetime_UTC)
 if(forecast_hour < 10){forecast_hour <- paste0("0",forecast_hour)}
-noaa_forecast_path <- file.path(config$data_location, config$forecast_met_model,config$lake_name_code,lubridate::as_date(forecast_start_datetime_UTC),forecast_hour)
+noaa_forecast_path <- file.path(noaa_data_location,config$lake_name_code,lubridate::as_date(forecast_start_datetime_UTC),forecast_hour)
 
 
 
 forecast_files <- list.files(noaa_forecast_path, full.names = TRUE)
 
 if(length(forecast_files) > 0){
-  
-  message("Forecasting inflow and outflows")
-  source(paste0(lake_directory, "/inflow_outflows/forecast_inflow_outflows.R"))
-  # Forecast Inflows
-  forecast_inflows_outflows(inflow_obs = file.path(config$qaqc_data_location, "/inflow_postQAQC.csv"),
-                            forecast_files = forecast_files,
-                            obs_met_file = file.path(config$qaqc_data_location,"observed-met_fcre.nc"),
-                            output_dir = config$data_location,
-                            inflow_model = config$forecast_inflow_model,
-                            inflow_process_uncertainty = FALSE,
-                            forecast_location = config$run_config$forecast_location)
-  
   
   ##### Read configuration files
   config <- yaml::read_yaml(file.path(forecast_location, "configuration_files","configure_flare.yml"))
@@ -74,9 +65,8 @@ if(length(forecast_files) > 0){
   
   #Download and process observations (already done)
   
-  cleaned_observations_file_long <- file.path(config$qaqc_data_location,"observations_postQAQC_long.csv")
-  cleaned_inflow_file <- file.path(config$qaqc_data_location, "/inflow_postQAQC.csv")
-  observed_met_file <- file.path(config$qaqc_data_location,"observed-met_fcre.nc")
+  cleaned_observations_file_long <- file.path(config$qaqc_data_location,"cram_temp_obs.csv")
+  observed_met_file <- file.path(config$qaqc_data_location,"cram_met_obs.csv")
   
   #Step up Drivers
   
