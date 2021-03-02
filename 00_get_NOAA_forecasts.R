@@ -1,5 +1,5 @@
 
-
+# Function to extract the NOAA files from MinIO
 download_noaa_files_s3 <- function(siteID, date, cycle, local_directory){
   
   Sys.setenv("AWS_DEFAULT_REGION" = "data",
@@ -11,9 +11,12 @@ download_noaa_files_s3 <- function(siteID, date, cycle, local_directory){
     aws.s3::save_object(object[[i]], bucket = "drivers", file = file.path(local_directory, object[[i]]$Key))
   }
 }
-date = seq(from = as.Date("2021-03-01"), to = as.Date(Sys.Date()), by = "days")
+
+# Specify your dates to get the forecasts of
+date = seq(from = as.Date("2020-11-10"), to = as.Date(Sys.Date()-1), by = "days")
 cycle = c("00")
 
+# Download the forecast from the MinIO site
 for(i in 1:length(date)){
   for(g in 1:length(cycle)){
   download_noaa_files_s3(siteID = "CRAM", 
@@ -23,4 +26,3 @@ for(i in 1:length(date)){
 
 }
 }
-
