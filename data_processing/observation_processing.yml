@@ -16,9 +16,9 @@ local_tzone: "CST"
 noaa_location: CRAM
 
 met_raw_obs_fname:
-    - met-data/cram_met_obs.csv
+    - cram_met_obs.csv
 
-downscaling_coeff: met-data/debiased.coefficients.2018_07_12_2019_07_11.RData
+downscaling_coeff: debiased.coefficients.2018_07_12_2019_07_11.RData
 
 #########################
 ### Depth information
@@ -44,8 +44,8 @@ depths_bins_top: [0.00, 0.10, 0.50, 1.00,
 
 
 
-realtime_met_station_location: master
-realtime_temp_location: master
+realtime_met_station_location: NEON_data
+realtime_temp_location: NEON_data
 
 insitu_temp_fname:
     - cram_temp_obs.csv
