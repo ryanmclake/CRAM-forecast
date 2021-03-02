@@ -6,13 +6,13 @@ remotes::install_github("cboettig/neonstore", force = T)
 
 
 if (!require('pacman')) install.packages('pacman'); library('pacman')
-pacman::p_load(tidyverse, lubridate)
+pacman::p_load(tidyverse, lubridate, VIM, naniar, missMDA, Amelia, mice, FactoMineR, broom)
 
 # -----------------------------------------------------------------------------------------------------------------
 
 #' Find and set the neonstore directory
 neonstore::neon_dir()
-Sys.setenv("NEONSTORE_HOME" = "D:/neonstore")
+Sys.setenv("NEONSTORE_HOME" = "/groups/rqthomas_lab/neonstore_cram")
 neonstore::neon_dir()
 
 # Lake and tower met station download
@@ -89,9 +89,59 @@ met_target <- full_join(radiation, airtemp, by = "time")%>%
   rename(ShortWave = inSWMean, LongWave = inLWMean, AirTemp = tempSingleMean,
          RelHum = RHMean, WindSpeed = windSpeedMean, Rain = secPrecipBulk)%>%
   mutate(Rain = Rain*0.024)%>%
-  mutate(ShortWave = ifelse(ShortWave<=0,0,ShortWave))
+  mutate(ShortWave = ifelse(ShortWave<=0,0,ShortWave))%>%
+  filter(time >= "2018-08-06")
+met_target <- as.data.frame(met_target)
 
 
+# Fill in missing data
+
+#ShortWave
+amelia.sw <- amelia(met_target, m = 50, polytime = 2, ts = "time", cs = NULL, lags = "ShortWave", leads = "ShortWave")
+sw_imputations <- bind_rows(unclass(amelia.sw$imputations), .id = "m") %>%
+  select(time, ShortWave)%>%
+  group_by(time)%>%
+  summarise_all(funs(mean))%>%
+  mutate(ShortWave = ifelse(ShortWave <= 0, 0, ShortWave))
+
+#LongWave
+amelia.lw <- amelia(met_target, m = 50, polytime = 2, ts = "time", cs = NULL, lags = "LongWave", leads = "LongWave")
+lw_imputations <- bind_rows(unclass(amelia.lw$imputations), .id = "m") %>%
+  select(time, LongWave)%>%
+  group_by(time)%>%
+  summarise_all(funs(mean))
+
+#AirTemp
+amelia.at <- amelia(met_target, m = 50, polytime = 0, ts = "time", cs = NULL, lags = "AirTemp", leads = "AirTemp")
+at_imputations <- bind_rows(unclass(amelia.at$imputations), .id = "m") %>%
+  select(time, AirTemp)%>%
+  group_by(time)%>%
+  summarise_all(funs(mean))
+
+#Himidity
+amelia.rh <- amelia(met_target, m = 50, polytime = 2, ts = "time", cs = NULL, lags = "RelHum", leads = "RelHum")
+rh_imputations <- bind_rows(unclass(amelia.rh$imputations), .id = "m") %>%
+  select(time, RelHum)%>%
+  group_by(time)%>%
+  summarise_all(funs(mean))%>%
+  mutate(RelHum = ifelse(RelHum >= 100, 100, RelHum))
+
+imputed <- left_join(sw_imputations, lw_imputations, by = "time")%>%
+  left_join(., at_imputations, by = "time")%>%
+  left_join(., rh_imputations, by = "time")
+
+met_new <- left_join(met_target, imputed, by = "time")
+
+met_qaqc <- met_new %>%
+  mutate(ShortWave.x = ifelse(is.na(ShortWave.x), ShortWave.y, ShortWave.x))%>%
+  mutate(LongWave.x = ifelse(is.na(LongWave.x), LongWave.y, LongWave.x))%>%
+  mutate(AirTemp.x = ifelse(is.na(AirTemp.x), AirTemp.y, AirTemp.x))%>%
+  mutate(RelHum.x = ifelse(is.na(RelHum.x), RelHum.y, RelHum.x))%>%
+  select(time, ShortWave.x, LongWave.x, AirTemp.x, RelHum.x, WindSpeed, Rain)%>%
+  rename(ShortWave = ShortWave.x, LongWave = LongWave.x, AirTemp = AirTemp.x, RelHum = RelHum.x)
+
+
+write_csv(met_qaqc, "./qaqc_data/cram_met_obs.csv")
 
 # Lake water temperature
 buoy_products = c("DP1.20264.001")
