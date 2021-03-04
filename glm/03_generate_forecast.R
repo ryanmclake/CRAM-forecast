@@ -29,7 +29,6 @@ if(forecast_hour < 10){forecast_hour <- paste0("0",forecast_hour)}
 noaa_forecast_path <- file.path(noaa_data_location,config$lake_name_code,lubridate::as_date(forecast_start_datetime_UTC),forecast_hour)
 
 
-
 forecast_files <- list.files(noaa_forecast_path, full.names = TRUE)
 
 if(length(forecast_files) > 0){
@@ -66,7 +65,7 @@ if(length(forecast_files) > 0){
   #Download and process observations (already done)
   
   cleaned_observations_file_long <- file.path(config$qaqc_data_location,"cram_temp_obs.csv")
-  observed_met_file <- file.path(config$qaqc_data_location,"cram_met_obs.csv")
+  observed_met_file <- file.path(config$qaqc_data_location,"observed-met_cram.nc")
   
   #Step up Drivers
   
