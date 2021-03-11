@@ -1,6 +1,6 @@
 config <- yaml::read_yaml(file.path(lake_directory,"data_processing","observation_processing.yml"))
 
-config$data_location <- "C:/Users/Owner/Documents/CRAM-forecast/NEON_data"
+config$data_location <- "./data"
 config$qaqc_data_location <- qaqc_data_location
 
 library(tidyverse)

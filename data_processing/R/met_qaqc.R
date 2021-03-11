@@ -6,34 +6,11 @@ met_qaqc <- function(realtime_file,
                      nldas = NULL){
   
   if(!is.na(qaqc_file)){
-    d1 <- readr::read_csv(realtime_file,
-                          col_names = c("TIMESTAMP","RECORD","BattV","PTemp_C","PAR_Den_Avg","PAR_Tot_Tot","BP_kPa_Avg","AirTC_Avg","RH","Rain_mm_Tot","WS_ms_Avg","WindDir","SR01Up_Avg","SR01Dn_Avg","IR01UpCo_Avg","IR01DnCo_Avg","NR01TK_Avg","Albedo_Avg"),
-                          col_types = list(
-                            TIMESTAMP = readr::col_datetime(format = ""),
-                            RECORD = readr::col_integer(),
-                            BattV = readr::col_double(),
-                            PTemp_C = readr::col_double(),
-                            PAR_Den_Avg = readr::col_double(),
-                            PAR_Tot_Tot = readr::col_double(),
-                            BP_kPa_Avg = readr::col_double(),
-                            AirTC_Avg = readr::col_double(),
-                            RH = readr::col_double(),
-                            Rain_mm_Tot = readr::col_double(),
-                            WS_ms_Avg = readr::col_double(),
-                            WindDir = readr::col_double(),
-                            SR01Up_Avg = readr::col_double(),
-                            SR01Dn_Avg = readr::col_double(),
-                            IR01UpCo_Avg = readr::col_double(),
-                            IR01DnCo_Avg = readr::col_double(),
-                            NR01TK_Avg = readr::col_double(),
-                            Albedo_Avg = readr::col_double())) %>%
-      dplyr::slice(-c(1,2,3,4))
+    d1 <- readr::read_csv(realtime_file)
     
-    #d1 <- d1[-85572, ]
+    TIMESTAMP_in <- lubridate::force_tz(d1$time, tzone = "GMT") #input_file_tz
     
-    TIMESTAMP_in <- lubridate::force_tz(d1$TIMESTAMP, tzone = input_file_tz)
-    
-    d1$TIMESTAMP <- lubridate::with_tz(TIMESTAMP_in,tz = local_tzone)
+    d1$time <- lubridate::with_tz(TIMESTAMP_in,tz = "CST6CDT") #local_tzone
     
     d2 <- readr::read_csv(qaqc_file,
                           col_types = list(Reservoir = readr::col_character(),

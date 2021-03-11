@@ -16,7 +16,7 @@ local_tzone: "GMT"
 noaa_location: CRAM
 
 met_raw_obs_fname:
-    - observed-met_cram.nc
+    - met_data.csv
 
 downscaling_coeff: debiased.coefficients.2018_07_12_2019_07_11.RData
 

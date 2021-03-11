@@ -1,5 +1,5 @@
-download.file("https://github.com/cwida/duckdb/releases/download/master-builds/duckdb_r_src.tar.gz", destfile = "./duckdb_r_src.tar.gz")
-install.packages("duckdb_r_src.tar.gz", repo = NULL)
+#download.file("https://github.com/cwida/duckdb/releases/download/master-builds/duckdb_r_src.tar.gz", destfile = "./duckdb_r_src.tar.gz")
+#install.packages("duckdb_r_src.tar.gz", repo = NULL)
 
 remotes::install_github("cboettig/neonstore")
 remotes::install_github("eco4cast/EFIstandards", force = T)
@@ -198,63 +198,7 @@ met_qaqc <- met_new %>%
          precipitation_flux = Rain.x, 
          air_pressure = Pressure.x)
 
-cf_var_names1 <- c("air_temperature", "air_pressure", "relative_humidity", "surface_downwelling_longwave_flux_in_air",
-                   "surface_downwelling_shortwave_flux_in_air", "precipitation_flux","specific_humidity","wind_speed")
-
-cf_var_units1 <- c("K", "Pa", "1", "Wm-2", "Wm-2", "kgm-2s-1", "1", "ms-1")  #Negative numbers indicate negative exponents
-
-model_name <- "observed-met"
-site <- "cram"
-lat <- 46.209675
-lon <- 360-89.473688
-start_time <- dplyr::first((met_qaqc$time))
-end_time <- dplyr::last((met_qaqc$time))
-cf_units <- cf_var_units1
-
-
-identifier <- paste(model_name, site,sep="_")
-
-fname <- paste0(identifier,".nc")
-
-output_file <- file.path(config$qaqc_data_location, fname)
-
-start_time <- min(met_qaqc$time)
-end_time <- max(met_qaqc$time)
-
-data <- met_qaqc %>%
-  dplyr::select(-time)
-
-diff_time <- as.numeric(difftime(met_qaqc$time, met_qaqc$time[1], units = "hours"))
-
-cf_var_names <- names(data)
-
-time_dim <- ncdf4::ncdim_def(name="time",
-                             units = paste("hours since", format(start_time, "%Y-%m-%d %H:%M")),
-                             diff_time, #GEFS forecast starts 6 hours from start time
-                             create_dimvar = TRUE)
-lat_dim <- ncdf4::ncdim_def("latitude", "degree_north", lat, create_dimvar = TRUE)
-lon_dim <- ncdf4::ncdim_def("longitude", "degree_east", lon, create_dimvar = TRUE)
-
-dimensions_list <- list(time_dim, lat_dim, lon_dim)
-
-nc_var_list <- list()
-for (i in 1:length(cf_var_names)) { #Each ensemble member will have data on each variable stored in their respective file.
-  nc_var_list[[i]] <- ncdf4::ncvar_def(cf_var_names[i], cf_units[i], dimensions_list, missval=NaN)
-}
-
-nc_flptr <- ncdf4::nc_create(output_file, nc_var_list, verbose = FALSE, )
-
-#For each variable associated with that ensemble
-for (j in 1:ncol(data)) {
-  # "j" is the variable number.  "i" is the ensemble number. Remember that each row represents an ensemble
-  ncdf4::ncvar_put(nc_flptr, nc_var_list[[j]], unlist(data[,j]))
-}
-
-ncdf4::nc_close(nc_flptr)  #Write to the disk/storage
-
-
-
-
+write_csv(met_qaqc, "./data/met_data.csv")
 
 
 
