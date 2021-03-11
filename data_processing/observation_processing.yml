@@ -47,8 +47,8 @@ depths_bins_top: [0.00, 0.10, 0.50, 1.00,
 realtime_met_station_location: NEON_data
 realtime_temp_location: NEON_data
 
-insitu_temp_fname:
-    - cram_temp_obs.csv
+insitu_obs_fname:
+    - temp_data.csv
 
 variable_obsevation_depths: FALSE
 

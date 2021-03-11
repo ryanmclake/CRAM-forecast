@@ -64,7 +64,7 @@ if(length(forecast_files) > 0){
   
   #Download and process observations (already done)
   
-  cleaned_observations_file_long <- file.path(config$qaqc_data_location,"cram_temp_obs.csv")
+  cleaned_observations_file_long <- file.path(config$qaqc_data_location,"observations_postQAQC_long.csv")
   observed_met_file <- file.path(config$qaqc_data_location,"observed-met_cram.nc")
   
   #Step up Drivers
