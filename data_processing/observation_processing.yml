@@ -11,7 +11,7 @@ lake_longitude: 89.473688  #Degrees West
 #Currently needed to be GMT so that it interfaces with the NOAA forecast
 #reference_tzone <<- "GMT"
 #Local time zone of the lake
-local_tzone: "GMT"
+local_tzone: "CST6CDT"
 
 noaa_location: CRAM
 

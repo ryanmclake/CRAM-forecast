@@ -103,7 +103,7 @@ met_target <- full_join(radiation, airtemp, by = "time")%>%
          RelHum = RHMean, WindSpeed = windSpeedMean, Rain = secPrecipBulk, Pressure = staPresMean)%>%
   mutate(Rain = Rain*0.024)%>%
   mutate(Pressure = Pressure*1000)%>%
-  mutate(ShortWave = ifelse(ShortWave<=0,0,ShortWave))%>%
+  mutate(ShortWave = ifelse(ShortWave<= 0,0,ShortWave))%>%
   filter(time >= "2018-08-06")
 met_target <- as.data.frame(met_target)
 

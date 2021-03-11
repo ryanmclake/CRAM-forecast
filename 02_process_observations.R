@@ -13,7 +13,7 @@ if(is.null(config$met_file)){
   met_qaqc(realtime_file = file.path(config$data_location, config$met_raw_obs_fname[1]),
            qaqc_file = file.path(config$data_location, config$met_raw_obs_fname[2]),
            cleaned_met_file_dir = config$qaqc_data_location,
-           input_file_tz = "EST",
+           input_file_tz = "CST6CDT",
            local_tzone = config$local_tzone)
 }else{
   file.copy(file.path(config$data_location,config$met_file), cleaned_met_file, overwrite = TRUE)

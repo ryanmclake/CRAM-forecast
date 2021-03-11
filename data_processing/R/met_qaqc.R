@@ -5,68 +5,15 @@ met_qaqc <- function(realtime_file,
                      local_tzone,
                      nldas = NULL){
   
-  if(!is.na(qaqc_file)){
+  if(is.na(qaqc_file)){
     d1 <- readr::read_csv(realtime_file)
+    d1$time <- lubridate::force_tz(d1$time, tzone = "CST6CDT") #input_file_tz
     
-    TIMESTAMP_in <- lubridate::force_tz(d1$time, tzone = "GMT") #input_file_tz
-    
-    d1$time <- lubridate::with_tz(TIMESTAMP_in,tz = "CST6CDT") #local_tzone
-    
-    d2 <- readr::read_csv(qaqc_file,
-                          col_types = list(Reservoir = readr::col_character(),
-                                           Site  = readr::col_character(),
-                                           DateTime = readr::col_datetime(format = ""),
-                                           Record = readr::col_integer(),
-                                           CR3000_Batt_V = readr::col_double(),
-                                           CR3000Panel_temp_C  = readr::col_double(),
-                                           PAR_Average_umol_s_m2  = readr::col_double(),
-                                           PAR_Total_mmol_m2  = readr::col_double(),
-                                           BP_Average_kPa  = readr::col_double(),
-                                           AirTemp_Average_C  = readr::col_double(),
-                                           RH_percent  = readr::col_double(),
-                                           Rain_Total_mm  = readr::col_double(),
-                                           WindSpeed_Average_m_s  = readr::col_double(),
-                                           WindDir_degrees  = readr::col_double(),
-                                           ShortwaveRadiationUp_Average_W_m2  = readr::col_double(),
-                                           ShortwaveRadiationDown_Average_W_m2  = readr::col_double(),
-                                           InfaredRadiationUp_Average_W_m2  = readr::col_double(),
-                                           InfaredRadiationDown_Average_W_m2  = readr::col_double(),
-                                           Albedo_Average_W_m2  = readr::col_double(),
-                                           Flag_PAR_Average_umol_s_m2 = readr::col_integer(),
-                                           Note_PAR_Average_umol_s_m2  = readr::col_character(),
-                                           Flag_PAR_Total_mmol_m2 = readr::col_integer(),
-                                           Note_PAR_Total_mmol_m2  = readr::col_character(),
-                                           Flag_BP_Average_kPa = readr::col_integer(),
-                                           Note_BP_Average_kPa  = readr::col_character(),
-                                           Flag_AirTemp_Average_C = readr::col_integer(),
-                                           Note_AirTemp_Average_C  = readr::col_character(),
-                                           Flag_RH_percent = readr::col_integer(),
-                                           Note_RH_percent  = readr::col_character(),
-                                           Flag_Rain_Total_mm = readr::col_integer(),
-                                           Note_Rain_Total_mm  = readr::col_character(),
-                                           Flag_WindSpeed_Average_m_s = readr::col_integer(),
-                                           Note_WindSpeed_Average_m_s  = readr::col_character(),
-                                           Flag_WindDir_degrees = readr::col_integer(),
-                                           Note_WindDir_degrees  = readr::col_character(),
-                                           Flag_ShortwaveRadiationUp_Average_W_m2 = readr::col_integer(),
-                                           Note_ShortwaveRadiationUp_Average_W_m2  = readr::col_character(),
-                                           Flag_ShortwaveRadiationDown_Average_W_m2 = readr::col_integer(),
-                                           Note_ShortwaveRadiationDown_Average_W_m2  = readr::col_character(),
-                                           Flag_InfaredRadiationUp_Average_W_m2 = readr::col_integer(),
-                                           Note_InfaredRadiationUp_Average_W_m2  = readr::col_character(),
-                                           Flag_InfaredRadiationDown_Average_W_m2 = readr::col_integer(),
-                                           Note_InfaredRadiationDown_Average_W_m2  = readr::col_character(),
-                                           Flag_Albedo_Average_W_m2 = readr::col_integer(),
-                                           Note_Albedo_Average_W_m2  = readr::col_character()))
-    
-    
-    TIMESTAMP_in <- lubridate::force_tz(d2$DateTime, tzone = input_file_tz)
-    
-    d2$TIMESTAMP <- lubridate::with_tz(TIMESTAMP_in,tz = local_tzone)
+    d2 <- readr::read_csv(qaqc_file)
+    d2$time <- lubridate::force_tz(d2$time, tzone = "CST6CDT") #input_file_tz
 
-    
-    d1 <- data.frame(time = d1$TIMESTAMP, ShortWave = d1$SR01Up_Avg, LongWave = d1$IR01UpCo_Avg, AirTemp = d1$AirTC_Avg, RelHum = d1$RH, WindSpeed = d1$WS_ms_Avg, Rain = d1$Rain_mm_Tot, pressure = d1$BP_kPa_Avg)
-    d2 <- data.frame(time = d2$TIMESTAMP, ShortWave = d2$ShortwaveRadiationUp_Average_W_m2, LongWave = d2$InfaredRadiationUp_Average_W_m2, AirTemp = d2$AirTemp_Average_C, RelHum = d2$RH_percent, WindSpeed = d2$WindSpeed_Average_m_s, Rain = d2$Rain_Total_mm, pressure = d2$BP_Average_kPa)
+    d1 <- data.frame(time = d1$time, ShortWave = d1$surface_downwelling_shortwave_flux_in_air, LongWave = d1$surface_downwelling_longwave_flux_in_air, AirTemp = d1$air_temperature, RelHum = d1$specific_humidity, WindSpeed = d1$wind_speed, Rain = d1$precipitation_flux, pressure = d1$air_pressure)
+    d2 <- data.frame(time = d2$time, ShortWave = d2$surface_downwelling_shortwave_flux_in_air, LongWave = d2$surface_downwelling_longwave_flux_in_air, AirTemp = d2$air_temperature, RelHum = d2$specific_humidity, WindSpeed = d2$wind_speed, Rain = d2$precipitation_flux, pressure = d2$air_pressure)
     
     d1 <- d1[which(d1$time > d2$time[nrow(d2)] | d1$time < d2$time[1]), ]
     
@@ -74,167 +21,57 @@ met_qaqc <- function(realtime_file,
     
   }else{
     
-    d1 <- readr::read_csv(realtime_file,
-                          col_names = c("TIMESTAMP","RECORD","BattV","PTemp_C","PAR_Den_Avg","PAR_Tot_Tot","BP_kPa_Avg","AirTC_Avg","RH","Rain_mm_Tot","WS_ms_Avg","WindDir","SR01Up_Avg","SR01Dn_Avg","IR01UpCo_Avg","IR01DnCo_Avg","NR01TK_Avg","Albedo_Avg"),
-                          col_types = list(
-                            TIMESTAMP = readr::col_datetime(format = ""),
-                            RECORD = readr::col_integer(),
-                            BattV = readr::col_double(),
-                            PTemp_C = readr::col_double(),
-                            PAR_Den_Avg = readr::col_double(),
-                            PAR_Tot_Tot = readr::col_double(),
-                            BP_kPa_Avg = readr::col_double(),
-                            AirTC_Avg = readr::col_double(),
-                            RH = readr::col_double(),
-                            Rain_mm_Tot = readr::col_double(),
-                            WS_ms_Avg = readr::col_double(),
-                            WindDir = readr::col_double(),
-                            SR01Up_Avg = readr::col_double(),
-                            SR01Dn_Avg = readr::col_double(),
-                            IR01UpCo_Avg = readr::col_double(),
-                            IR01DnCo_Avg = readr::col_double(),
-                            NR01TK_Avg = readr::col_double(),
-                            Albedo_Avg = readr::col_double())) %>%
-      dplyr::slice(-c(1,2,3,4))
+    d1 <- readr::read_csv(realtime_file)
+    d1$time <- lubridate::force_tz(d1$time, tzone = "CST6CDT") #input_file_tz
     
-    #d1 <- d1[-85572, ]
-    
-    TIMESTAMP_in <- as.POSIXct(d1$TIMESTAMP,
-                               format= "%Y-%m-%d %H:%M",
-                               tz = input_file_tz)
-    
-    d1$TIMESTAMP <- with_tz(TIMESTAMP_in,tz = local_tzone)
-    
-    d <- data.frame(time = d1$TIMESTAMP, ShortWave = d1$SR01Up_Avg, LongWave = d1$IR01UpCo_Avg, AirTemp = d1$AirTC_Avg, RelHum = d1$RH, WindSpeed = d1$WS_ms_Avg, Rain = d1$Rain_mm_Tot, pressure = d1$BP_kPa_Avg)
+    d <- d1
   }
   
   
   wshgt <- 3
   roughlength <- 0.000114
-  d$WindSpeed <- d$WindSpeed * log(10.00 / 0.000114) / log(wshgt / 0.000114)
-  
   maxTempC = 41 # an upper bound of realistic temperature for the study site in deg C
   minTempC = -24 # an lower bound of realistic temperature for the study site in deg C
   
-  d <- d %>%
-    dplyr::mutate(ShortWave = ifelse(ShortWave < 0, 0, ShortWave),
-                  RelHum = ifelse(RelHum < 0, 0, RelHum),
-                  RelHum = ifelse(RelHum > 100, 100, RelHum),
-                  AirTemp = ifelse(AirTemp> maxTempC, NA, AirTemp),
-                  AirTemp = ifelse(AirTemp < minTempC, NA, AirTemp),
-                  LongWave = ifelse(LongWave < 0, NA, LongWave),
-                  WindSpeed = ifelse(WindSpeed < 0, 0, WindSpeed)) %>%
+  d <- d %>% dplyr::mutate(surface_downwelling_shortwave_flux_in_air = ifelse(surface_downwelling_shortwave_flux_in_air < 0, 0, surface_downwelling_shortwave_flux_in_air),
+                           relative_humidity = ifelse(specific_humidity < 0, 0, specific_humidity),
+                           relative_humidity = ifelse(specific_humidity > 100, 100, specific_humidity),
+                           relative_humidity = specific_humidity / 100,
+                           air_temperature = ifelse(air_temperature> maxTempC, NA, air_temperature),
+                           air_temperature = ifelse(air_temperature < minTempC, NA, air_temperature),
+                           air_temperature = air_temperature + 273.15,
+                           surface_downwelling_longwave_flux_in_air = ifelse(surface_downwelling_longwave_flux_in_air < 0, 0, surface_downwelling_longwave_flux_in_air),
+                           wind_speed = wind_speed * log(10.00 / 0.000114) / log(wshgt / 0.000114),
+                           wind_speed = ifelse(wind_speed < 0, 0, wind_speed)) %>%
     filter(is.na(time) == FALSE)
   
-  d <- d %>%
-    mutate(day = lubridate::day(time),
-           year = lubridate::year(time),
-           hour = lubridate::hour(time),
-           month = lubridate::month(time)) %>%
-    group_by(day, year, hour, month) %>%
-    summarize(ShortWave = mean(ShortWave, na.rm = TRUE),
-              LongWave = mean(LongWave, na.rm = TRUE),
-              AirTemp = mean(AirTemp, na.rm = TRUE),
-              RelHum = mean(RelHum, na.rm = TRUE),
-              WindSpeed = mean(WindSpeed, na.rm = TRUE),
-              pressure = mean(pressure, na.rm = TRUE),
-              Rain = sum(Rain), .groups = "drop") %>%
-    mutate(day = as.numeric(day),
-           hour = as.numeric(hour)) %>%
-    mutate(day = ifelse(as.numeric(day) < 10, paste0("0",day),day),
-           hour = ifelse(as.numeric(hour) < 10, paste0("0",hour),hour)) %>%
-    mutate(time = lubridate::as_datetime(paste0(year,"-",month,"-",day," ",hour,":00:00"),tz = local_tzone)) %>%
-    dplyr::select(time,ShortWave,LongWave,AirTemp,RelHum,WindSpeed,Rain,pressure) %>%
-    arrange(time)
-  
-  d <- d %>%
-    rename(surface_downwelling_shortwave_flux_in_air = ShortWave,
-           surface_downwelling_longwave_flux_in_air = LongWave,
-           air_temperature = AirTemp,
-           relative_humidity = RelHum,
-           wind_speed = WindSpeed,
-           precipitation_flux = Rain,
-           air_pressure = pressure)
-  
-  d <- d %>%
-    mutate(air_temperature = air_temperature + 273.15,
-           relative_humidity = relative_humidity / 100)
-  
-  
-  #Note that mm hr-1 is the same as kg m2 hr-1. Converting to kg m2 s-1
-  d$precipitation_flux <- d$precipitation_flux / (60 * 60)
-  
-  d$air_pressure <- d$air_pressure * 1000
   
   d$specific_humidity <-  noaaGEFSpoint:::rh2qair(rh = d$relative_humidity,
                                                   T = d$air_temperature,
                                                   press = d$air_pressure)
   
-  d <- d %>%
-    select(time, air_temperature, air_pressure, relative_humidity, surface_downwelling_longwave_flux_in_air, surface_downwelling_shortwave_flux_in_air, precipitation_flux, specific_humidity, wind_speed)
+  d <- d %>%select(time, 
+                   air_temperature, 
+                   air_pressure, 
+                   relative_humidity, 
+                   surface_downwelling_longwave_flux_in_air, 
+                   surface_downwelling_shortwave_flux_in_air, 
+                   precipitation_flux, specific_humidity, 
+                   wind_speed)
   
   cf_var_names1 <- c("air_temperature", "air_pressure", "relative_humidity", "surface_downwelling_longwave_flux_in_air",
                      "surface_downwelling_shortwave_flux_in_air", "precipitation_flux","specific_humidity","wind_speed")
   
   cf_var_units1 <- c("K", "Pa", "1", "Wm-2", "Wm-2", "kgm-2s-1", "1", "ms-1")  #Negative numbers indicate negative exponents
   
-  d$time <- lubridate::with_tz(d$time, tzone = "UTC")
-  
   d <- d %>%
     tidyr::drop_na()
   
-  if(!is.null(nldas)){
-    
-    print("Gap filling with NLDAS")
-    d_nldas <- readr::read_csv(nldas, col_type = readr::cols())
-    
-    d_nldas <- d_nldas %>%
-      rename(air_temperature = AirTemp,
-             surface_downwelling_shortwave_flux_in_air = ShortWave,
-             surface_downwelling_longwave_flux_in_air = LongWave,
-             relative_humidity = RelHum,
-             wind_speed = WindSpeed,
-             precipitation_flux = Rain) %>%
-      mutate(air_pressure = NA,
-             specific_humidity = NA,
-             air_temperature = air_temperature + 273.15,
-             relative_humidity = relative_humidity/ 100,
-             precipitation_flux = precipitation_flux * 1000 / (60 * 60 * 24)) %>%
-      select(all_of(names(d)))
-    
-    d_nldas$time <- lubridate::with_tz(d_nldas$time, tzone = "UTC")
-    
-    d_nldas <- d_nldas %>%
-      filter(time >= min(d$time), time <= max(d$time))
-    
-    d_nldas_gaps <- d_nldas %>%
-      filter(!(time %in% d$time))
-    
-    d_full <- rbind(d, d_nldas_gaps) %>%
-      arrange(time)
-    
-  }else{
-    
-    t <- seq(min(d$time), max(d$time), by = "1 hour")
-    cont_time <- tibble(time = t)
-    
-    d_full <- dplyr::left_join(cont_time, d, by = "time")
-    
-    d_full <- d_full %>%
-      mutate(air_temperature = imputeTS::na_interpolation(air_temperature, option = "linear"),
-             air_pressure = imputeTS::na_interpolation(air_pressure, option = "linear"),
-             relative_humidity = imputeTS::na_interpolation(relative_humidity, option = "linear"),
-             surface_downwelling_longwave_flux_in_air = imputeTS::na_interpolation(surface_downwelling_longwave_flux_in_air, option = "linear"),
-             surface_downwelling_shortwave_flux_in_air = imputeTS::na_interpolation(surface_downwelling_shortwave_flux_in_air, option = "linear"),
-             precipitation_flux = imputeTS::na_interpolation(precipitation_flux, option = "linear"),
-             specific_humidity = imputeTS::na_interpolation(specific_humidity, option = "linear"),
-             wind_speed = imputeTS::na_interpolation(wind_speed, option = "linear"))
-  }
   
   model_name <- "observed-met"
-  site <- "fcre"
-  lat <- 37.27
-  lon <- 360-79.9
+  site <- "cram"
+  lat <- 46.209675
+  lon <- 360-89.473688
   start_time <- dplyr::first((d$time))
   end_time <- dplyr::last((d$time))
   cf_units <- cf_var_units1
