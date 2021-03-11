@@ -103,7 +103,7 @@ met_target <- full_join(radiation, airtemp, by = "time")%>%
          RelHum = RHMean, WindSpeed = windSpeedMean, Rain = secPrecipBulk, Pressure = staPresMean)%>%
   mutate(Rain = Rain*0.024)%>%
   mutate(Pressure = Pressure*1000)%>%
-  mutate(ShortWave = ifelse(ShortWave<= 0,0,ShortWave))%>%
+  mutate(ShortWave = ifelse(ShortWave<=0,0,ShortWave))%>%
   filter(time >= "2018-08-06")
 met_target <- as.data.frame(met_target)
 
@@ -217,7 +217,12 @@ neonstore::neon_store("TSD_30_min-expanded")
 water_temp <- neonstore::neon_table(table = "TSD_30_min-expanded", site = "CRAM")%>% 
   select(endDateTime, thermistorDepth, tsdWaterTempMean) %>%
   arrange(endDateTime, thermistorDepth)%>%
-  rename(Depth = thermistorDepth)%>%
-  rename(temp = tsdWaterTempMean)%>%
-  mutate(variable = "watertemperature")
+  rename(depth = thermistorDepth)%>%
+  rename(value = tsdWaterTempMean)%>%
+  rename(timestamp = endDateTime)%>%
+  mutate(variable = "temperature",
+         method = "thermistor",
+         value = ifelse(is.nan(value), NA, value))%>%
+  select(timestamp, depth, value, variable, method)
 
+write_csv(water_temp, "./data/temp_data.csv")
