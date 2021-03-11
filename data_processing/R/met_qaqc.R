@@ -2,8 +2,7 @@ met_qaqc <- function(realtime_file,
                      qaqc_file,
                      cleaned_met_file_dir,
                      input_file_tz,
-                     local_tzone,
-                     nldas = NULL){
+                     local_tzone){
   
   if(is.na(qaqc_file)){
     d1 <- readr::read_csv(realtime_file)
@@ -37,8 +36,6 @@ met_qaqc <- function(realtime_file,
                            relative_humidity = ifelse(specific_humidity < 0, 0, specific_humidity),
                            relative_humidity = ifelse(specific_humidity > 100, 100, specific_humidity),
                            relative_humidity = specific_humidity / 100,
-                           air_temperature = ifelse(air_temperature> maxTempC, NA, air_temperature),
-                           air_temperature = ifelse(air_temperature < minTempC, NA, air_temperature),
                            air_temperature = air_temperature + 273.15,
                            surface_downwelling_longwave_flux_in_air = ifelse(surface_downwelling_longwave_flux_in_air < 0, 0, surface_downwelling_longwave_flux_in_air),
                            wind_speed = wind_speed * log(10.00 / 0.000114) / log(wshgt / 0.000114),
@@ -85,10 +82,10 @@ met_qaqc <- function(realtime_file,
   start_time <- min(d$time)
   end_time <- max(d$time)
   
-  data <- d_full %>%
+  data <- d %>%
     dplyr::select(-time)
   
-  diff_time <- as.numeric(difftime(d_full$time, d_full$time[1], units = "hours"))
+  diff_time <- as.numeric(difftime(d$time, d$time[1], units = "hours"))
   
   cf_var_names <- names(data)
   
