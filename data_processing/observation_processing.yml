@@ -16,7 +16,7 @@ local_tzone: "CST6CDT"
 noaa_location: CRAM
 
 met_raw_obs_fname:
-    - met_data.csv
+    - met_data_w_gaps.csv
 
 downscaling_coeff: debiased.coefficients.2018_07_12_2019_07_11.RData
 
