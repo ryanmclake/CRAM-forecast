@@ -8,7 +8,10 @@ remotes::install_github("rqthomas/flare")
 if (!require('pacman')) install.packages('pacman'); library('pacman')
 pacman::p_load(tidyverse, lubridate, VIM, naniar, missMDA, Amelia, mice, FactoMineR, broom, aws.s3)
 
-
+# Set up the directories
+#local_directory <- "home/ryan333/CRAM-forecast/data/NOAA_data/"
+local_directory <- "C:/Users/Owner/Desktop/CRAM-forecast/data/NOAA_data/"
+lake_directory <- "C:/Users/Owner/Desktop/CRAM-forecast"
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ### DOANLOAD THE NEWEST NOAA DATA ###
@@ -19,6 +22,7 @@ source(file.path(lake_directory, "data_download/NOAA_downloads.R"))
 # Specify your dates that you want NOAA forecast for
 date = seq(from = as.Date(Sys.Date()-16), to = as.Date(Sys.Date()-1), by = "days")
 cycle = c("00")
+siteID = "CRAM"
 
 # Download the forecast from the MinIO site
 for(i in 1:length(date)){
@@ -26,7 +30,7 @@ for(i in 1:length(date)){
     download_noaa_files_s3(siteID = siteID,
                            date = date[i], 
                            cycle = cycle[g], 
-                           local_directory <- "home/ryan333/CRAM-forecast/data/NOAA_data/")
+                           local_directory <- local_directory)
   }
 }
 
@@ -160,7 +164,7 @@ write_csv(water_temp, "./data/temp_data.csv")
 
 
 # set your WD paths for CRAM FLARE
-lake_directory <- "/home/ryan333/CRAM-forecast"
+
 qaqc_data_location <- file.path(lake_directory, "qaqc_data")
 data_location <- "/home/ryan333/CRAM-forecast"
 noaa_data_location <- "/home/ryan333/CRAM-forecast/data/NOAA_data/noaa/NOAAGEFS_1hr"
