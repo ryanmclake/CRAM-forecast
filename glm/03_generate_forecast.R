@@ -1,6 +1,6 @@
 #### Move to 03_forecast_inflows.R
 
-forecast_location <- "/home/ryan333/CRAM-forecast/glm"
+forecast_location <- "C:/Users/Owner/Desktop/CRAM-forecast/glm"
 
 config <- yaml::read_yaml(file.path(forecast_location, "configuration_files","configure_flare.yml"))
 run_config <- yaml::read_yaml(file.path(forecast_location, "configuration_files","run_configuration.yml"))
@@ -197,3 +197,4 @@ if(length(forecast_files) > 0){
   run_config$forecast_start_day_local <- as.character(lubridate::as_date(run_config$forecast_start_day_local) + lubridate::days(1))
   yaml::write_yaml(run_config, file = file.path(forecast_location, "configuration_files","run_configuration.yml"))
 }
+ 
