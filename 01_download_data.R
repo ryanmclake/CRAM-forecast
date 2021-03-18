@@ -18,7 +18,7 @@ noaa_data_location <- "C:/Users/Owner/Desktop/CRAM-forecast/data/NOAA_data/noaa/
 ### DOANLOAD THE NEWEST NOAA DATA ###
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 files_noaa <- list.files(noaa_data_location)
-date = seq(from = as.Date(Sys.Date()-3), to = as.Date(Sys.Date()-1), by = "days")
+date = seq(from = lubridate::as_date("2020-09-25"), to = lubridate::as_date(Sys.Date()-2), by = "days")
 cycle = c("00")
 siteID_noaa = "CRAM"
 siteID_neon = c("CRAM","UNDE")

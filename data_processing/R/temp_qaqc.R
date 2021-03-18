@@ -14,7 +14,9 @@ temp_qaqc <- function(realtime_file,
                                  value = value) %>%
     dplyr::mutate(variable = "temperature",
                   method = "thermistor",
-                  value = ifelse(is.nan(value), NA, value))
+                  value = ifelse(is.nan(value), NA, value),
+                  hour = lubridate::hour(timestamp))%>%
+    rename(date = timestamp)
   
   d <- d_therm %>% mutate(depth = as.numeric(depth))
   
