@@ -1,7 +1,8 @@
 config <- yaml::read_yaml(file.path(lake_directory,"data_processing","observation_processing.yml"))
 
 config$data_location <- "./data"
-config$qaqc_data_location <- qaqc_data_location
+config$qaqc_data_location <- "./qaqc_data"
+
 
 library(tidyverse)
 library(lubridate)

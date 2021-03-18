@@ -1,10 +1,10 @@
 #download.file("https://github.com/cwida/duckdb/releases/download/master-builds/duckdb_r_src.tar.gz", destfile = "./duckdb_r_src.tar.gz")
 #install.packages("duckdb_r_src.tar.gz", repo = NULL)
 
-remotes::install_github("cboettig/neonstore", force = F)
-remotes::install_github("eco4cast/EFIstandards", force = F)
-remotes::install_github("rqthomas/flare", force = F)
-devtools::install_github("rqthomas/noaaGEFSpoint", force = F)
+remotes::install_github("cboettig/neonstore", force = T)
+remotes::install_github("eco4cast/EFIstandards", force = T)
+remotes::install_github("FLARE-forecast/flare", force = T)
+devtools::install_github("rqthomas/noaaGEFSpoint", force = T)
 
 if (!require('pacman')) install.packages('pacman'); library('pacman')
 pacman::p_load(tidyverse, lubridate, VIM, naniar, missMDA, Amelia, mice, FactoMineR, broom, aws.s3)

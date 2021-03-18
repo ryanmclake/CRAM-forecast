@@ -7,5 +7,5 @@ forecast_horizon: 16.0
 forecast_project_id: CRAMPTON_runs
 sim_name: CRAMPTON_runs
 forecast_sss_on: no
-forecast_location: /home/ryan333/CRAM-forecast/NOAA_data/noaa/NOAAGEFS_1hr/CRAM
-execute_location: /groups/rqthomas_lab/execute
+forecast_location: C:/Users/Owner/Desktop/CRAM-forecast/glm
+execute_location: C:/Users/Owner/Desktop/
