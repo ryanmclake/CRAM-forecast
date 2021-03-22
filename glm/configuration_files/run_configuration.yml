@@ -1,11 +1,11 @@
-restart_file: C:/Users/mooret/Desktop/Git/CRAM-forecast/glm/CRAMPTON_runs_H_2020_11_10_2020_11_11_F_5_20210322T101842.nc
-start_day_local: '2020-11-11'
+restart_file: .na
+start_day_local: '2020-11-12'
 start_time_local: '00:00:00'
 end_day_local: .na
-forecast_start_day_local: '2020-11-12'
+forecast_start_day_local: '2020-11-13'
 forecast_horizon: 5
 forecast_project_id: CRAMPTON_runs
-sim_name: CRAMPTON_runs
+sim_name: CRAMPTON_runs2
 forecast_sss_on: no
 forecast_location: C:/Users/mooret/Desktop/Git/CRAM-forecast/glm
 execute_location: C:/Users/mooret/Desktop/Git/CRAM-forecast/wd
