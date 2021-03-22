@@ -10,9 +10,9 @@ if (!require('pacman')) install.packages('pacman'); library('pacman')
 pacman::p_load(tidyverse, lubridate, VIM, naniar, missMDA, Amelia, mice, FactoMineR, broom, aws.s3)
 
 # Set up the directories
-local_directory <- "C:/Users/Owner/Desktop/CRAM-forecast/data/NOAA_data"
-lake_directory <- "C:/Users/Owner/Desktop/CRAM-forecast"
-noaa_data_location <- "C:/Users/Owner/Desktop/CRAM-forecast/data/NOAA_data/noaa/NOAAGEFS_1hr"
+local_directory <- file.path(getwd(), "data", "NOAA_data")
+lake_directory <- getwd()
+noaa_data_location <- file.path(getwd(),"data","NOAA_data","noaa","NOAAGEFS_1hr")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ### DOANLOAD THE NEWEST NOAA DATA ###
