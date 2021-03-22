@@ -1,5 +1,5 @@
-qaqc_data_location: ./qaqc_data
-data_location: ./data
+qaqc_data_location: C:/Users/mooret/Desktop/Git/CRAM-forecast/qaqc_data
+data_location: C:/Users/mooret/Desktop/Git/CRAM-forecast/data
 
 ##########################
 # Lake information
@@ -149,7 +149,7 @@ sss_inflow_factor: .na
 ##############################
 ##  EnKF setup
 ##############################
-ensemble_size:  221 #221 #441
+ensemble_size:  21 #221 #441
 localization_distance: .na #distance in meters were covariances in the model error are used
 vert_decorr_length: 5.0
 no_negative_states: TRUE
