@@ -1,4 +1,6 @@
 #### Move to 03_forecast_inflows.R
+# remotes::install_github("tadhg-moore/flare-1")
+# remotes::install_github("aemon-j/GLM3r", ref = "v3.1.1") # Needed for Windows
 
 forecast_location <- file.path(getwd(), "glm")
 noaa_data_location <- file.path(getwd(),"data","NOAA_data","noaa","NOAAGEFS_1hr")
@@ -196,7 +198,7 @@ if(length(forecast_files) > 0){
   
   run_config$start_day_local <- run_config$forecast_start_day_local
   run_config$forecast_start_day_local <- as.character(lubridate::as_date(run_config$forecast_start_day_local) + lubridate::days(1))
-  run_config$restart_file <- saved_file
+  run_config$restart_file <- NA #saved_file
   yaml::write_yaml(run_config, file = file.path(forecast_location, "configuration_files","run_configuration.yml"))
 }else{
   run_config$forecast_start_day_local <- as.character(lubridate::as_date(run_config$forecast_start_day_local) + lubridate::days(1))
