@@ -1,5 +1,5 @@
-qaqc_data_location: C:/Users/mooret/Desktop/Git/CRAM-forecast/qaqc_data
-data_location: C:/Users/mooret/Desktop/Git/CRAM-forecast/data
+qaqc_data_location: /Users/ryanmcclure/Documents/CRAM-forecast/qaqc_data
+data_location: /Users/ryanmcclure/Documents/CRAM-forecast/data
 
 ##########################
 # Lake information
@@ -101,14 +101,14 @@ depths_bins_top: [0.00, 0.10, 0.50, 1.00,
                   16.5, 17.0, 17.5,
                   18.0, 18.5, 19.0]
 
-default_temp_init: [12, 12, 12, 12, 12, 
-                    12, 12, 12, 12, 12, 
-                    12, 12, 12, 12, 12, 
-                    12, 12, 12, 12, 12, 
-                    12, 12, 12, 12, 12,
-                    12, 12, 12, 12, 12,
-                    12, 12, 12, 12, 12,
-                    12, 12, 12, 12, 12]
+default_temp_init: [4, 4, 4, 4, 4, 
+                    4, 4, 4, 4, 4, 
+                    4, 4, 4, 4, 4, 
+                    4, 4, 4, 4, 4, 
+                    4, 4, 4, 4, 4,
+                    4, 4, 4, 4, 4,
+                    4, 4, 4, 4, 4,
+                    4, 4, 4, 4, 4]
                     
 default_temp_init_depths: [0.00, 0.10, 0.50, 1.00,
                   1.50, 2.00, 2.50,
