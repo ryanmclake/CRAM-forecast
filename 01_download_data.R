@@ -1,36 +1,35 @@
 #download.file("https://github.com/cwida/duckdb/releases/download/master-builds/duckdb_r_src.tar.gz", destfile = "./duckdb_r_src.tar.gz")
 #install.packages("duckdb_r_src.tar.gz", repo = NULL)
+if (!require('pacman')) install.packages('pacman'); library('pacman')
+pacman::p_load(tidyverse, lubridate, VIM, naniar, missMDA, Amelia, mice, FactoMineR, broom, aws.s3, GLM3r)
 
 remotes::install_github("cboettig/neonstore", force = T)
 remotes::install_github("eco4cast/EFIstandards", force = T)
-remotes::install_github("FLARE-forecast/flare", force = T)
-devtools::install_github("rqthomas/noaaGEFSpoint", force = T)
-
-if (!require('pacman')) install.packages('pacman'); library('pacman')
-pacman::p_load(tidyverse, lubridate, VIM, naniar, missMDA, Amelia, mice, FactoMineR, broom, aws.s3)
+#remotes::install_github("FLARE-forecast/flare", force = T)
+remotes::install_github("FLARE-forecast/noaaGEFSpoint", force = T)
 
 # Set up the directories
 local_directory <- file.path(getwd(), "data", "NOAA_data")
 lake_directory <- getwd()
-noaa_data_location <- file.path(getwd(),"data","NOAA_data","noaa","NOAAGEFS_1hr")
+noaa_data_location <- file.path(getwd(),"data","NOAA_data","noaa","NOAAGEFS_1hr",siteID)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ### DOANLOAD THE NEWEST NOAA DATA ###
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 files_noaa <- list.files(noaa_data_location)
-date = seq(from = lubridate::as_date("2020-09-25"), to = lubridate::as_date(Sys.Date()-2), by = "days")
+date = seq(from = Sys.Date()-10, to = Sys.Date()-1, by = "days")
 cycle = c("00")
-siteID_noaa = "CRAM"
+siteID = "CRAM"
 siteID_neon = c("CRAM","UNDE")
 
 source(file.path(lake_directory, "data_download/NOAA_downloads.R"))
 
-if(last(files_noaa) == as.Date(Sys.Date()-1)){
+if(last(files_noaa) == Sys.Date()){
   "You have all the NOAA data my friend"
 }else{
   for(i in 1:length(date)){
     for(g in 1:length(cycle)){
-      download_noaa_files_s3(siteID = siteID_noaa,
+      download_noaa_files_s3(siteID = siteID,
                              date = date[i], 
                              cycle = cycle[g], 
                              local_directory <- local_directory)
@@ -38,13 +37,12 @@ if(last(files_noaa) == as.Date(Sys.Date()-1)){
   }
 }
 
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ### DOANLOAD THE NEWEST NEON DATA ###
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 neonstore::neon_dir()
-Sys.setenv("NEONSTORE_HOME" = "C:/Users/Owner/Desktop/CRAM-forecast/data/neonstore/")
+Sys.setenv("NEONSTORE_HOME" = "/Users/ryanmcclure/Documents/CRAM-forecast/data/neonstore/")
 
 # Lake and tower met station download
 met_products = c("DP1.00098.001", "DP1.00002.001", "DP1.00023.001", "DP1.00006.001", "DP1.00001.001", "DP1.00004.001")
